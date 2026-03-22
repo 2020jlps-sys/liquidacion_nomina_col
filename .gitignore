@@ -1,0 +1,17 @@
+# Archivos de datos / Data files
+*.xlsx
+*.csv
+
+# Carpetas temporales de Python / Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales / Virtual environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env/
+.venv/
