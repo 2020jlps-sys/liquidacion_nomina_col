@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
+from data_cleaner import clean_data
+from time_logic import calculate_time_classifications
 
 # Configure wide layout
 st.set_page_config(layout="wide", page_title="Liquidador de Horas Extras - Panna Food")
@@ -8,19 +10,31 @@ st.set_page_config(layout="wide", page_title="Liquidador de Horas Extras - Panna
 # Title
 st.title("Liquidador de Horas Extras y Recargos - Panna Food")
 
+st.sidebar.header("Carga de Archivos")
+horas_file = st.sidebar.file_uploader("Sube el archivo de horas (HExPFMar.xlsx)", type=['xlsx'])
+clasif_file = st.sidebar.file_uploader("Sube el archivo de empleados (EmplClasif.xlsx)", type=['xlsx'])
+
 @st.cache_data
-def load_data():
-    # Load dataset with semicolon separator
-    df = pd.read_csv("resultados_nomina.csv", sep=";")
-    return df
+def process_nomina_files(horas, clasif):
+    # Pass uploaded files to data_cleaner
+    df_clean = clean_data(horas, clasif)
+    # Run business logic to calculate hours
+    df_result = calculate_time_classifications(df_clean)
+    return df_result
+
+if horas_file is None or clasif_file is None:
+    st.info("Por favor, sube los archivos de Excel en la barra lateral para iniciar la liquidación.")
+    st.stop()
 
 try:
-    df = load_data()
+    with st.spinner("Procesando datos y calculando nómina. Esto puede tomar unos segundos..."):
+        df = process_nomina_files(horas_file, clasif_file)
 except Exception as e:
-    st.error(f"Error cargando el archivo resultados_nomina.csv: {e}")
+    st.error(f"Error procesando los archivos: {e}")
     st.stop()
 
 # Sidebar for filters
+st.sidebar.markdown("---")
 st.sidebar.header("Filtros de Búsqueda")
 
 empleados = ["Todos"] + sorted(list(df['Empleado'].dropna().unique()))
@@ -78,4 +92,4 @@ try:
         mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
 except Exception as e:
-    st.sidebar.error(f"Error al generar Excel. Por favor revisa las dependencias: {e}")
+    st.sidebar.error(f"Error al generar Excel: {e}")

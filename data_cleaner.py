@@ -1,11 +1,11 @@
 import pandas as pd
 
-def clean_data():
+def clean_data(horas_file='HExPFMar.xlsx', clasif_file='EmplClasif.xlsx'):
     print("Leyendo archivos...")
     # Leer archivos
-    df_horas = pd.read_excel('HExPFMar.xlsx')
+    df_horas = pd.read_excel(horas_file)
     # Use sheet_name='Empleados' for classification columns
-    df_clasif = pd.read_excel('EmplClasif.xlsx', sheet_name='Empleados')
+    df_clasif = pd.read_excel(clasif_file, sheet_name='Empleados')
 
     print("Columnas de df_horas:", df_horas.columns.tolist())
     print("Columnas de df_clasif:", df_clasif.columns.tolist())
