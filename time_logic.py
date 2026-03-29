@@ -135,14 +135,7 @@ def calculate_time_classifications(df: pd.DataFrame) -> pd.DataFrame:
             res['HEDO'] = 0.0
             
             res['HNO'] += res['HENO']
-            res['HENO'] = 0.0
-            
-            res['HDDF'] += res['HEDDF']
-            res['HEDDF'] = 0.0
-            
-            res['HNDF'] += res['HENDF']
-            res['HENDF'] = 0.0
-            
+            res['HENO'] = 0.0                            
         return pd.Series(res)
 
     # Aplicamos la función fila por fila
